@@ -1,0 +1,2 @@
+CREATE TABLE fact_daily_operations(date TEXT,region TEXT,issuer TEXT,merchant_category TEXT,device_segment TEXT,attempts INTEGER,successful_transactions INTEGER,failed_transactions INTEGER,gmv_cny REAL,is_anomaly_window INTEGER,is_synthetic INTEGER);
+CREATE TABLE funnel_cohorts(cohort_week TEXT,eligible_devices INTEGER,provision_started INTEGER,activated INTEGER,first_transaction INTEGER,repeat_30d INTEGER,activation_rate REAL,first_txn_rate REAL,repeat_30d_rate REAL);

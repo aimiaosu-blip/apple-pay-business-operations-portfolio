@@ -1,0 +1,3 @@
+# BI Handoff
+
+Import `data/processed/daily_kpis_bi.csv`, `monthly_kpis_bi.csv`, the dimension CSVs and `data/raw/funnel_cohorts_synthetic.csv`. A 14-day human-readable fact sample is committed at `data/raw/fact_daily_operations_sample.csv`; run `python scripts/generate_data.py` to recreate the complete 87,600-row CSV and SQLite database. Use a star schema at daily segment grain. Measures must aggregate raw numerators and denominators: `SUM(successful_transactions) / SUM(attempts)`, never an average of precomputed rates. Build cards for attempts, success rate, synthetic GMV and latest 30-day repeat; trends for daily/monthly success; a diagnostic matrix by issuer/category/device; and cohort views. All data are synthetic and file-refresh only.

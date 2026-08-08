@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Operating review workbook preview</title>
+  <desc id="desc">A reviewable vector preview of the Excel operating dashboard.</desc>
+  <rect width="1200" height="630" fill="#f5f8fa"/>
+  <rect x="40" y="36" width="1120" height="558" fill="#ffffff" stroke="#d7e0e4"/>
+  <rect x="40" y="36" width="1120" height="74" fill="#102a36"/>
+  <text x="70" y="82" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#ffffff">Digital Wallet Business Operations Review</text>
+  <g font-family="Arial, sans-serif">
+    <rect x="70" y="140" width="245" height="105" fill="#eef3f5"/><text x="88" y="172" font-size="15" fill="#62717b">TOTAL ATTEMPTS</text><text x="88" y="215" font-size="34" font-weight="700" fill="#1473e6">7.53M</text>
+    <rect x="335" y="140" width="245" height="105" fill="#eef3f5"/><text x="353" y="172" font-size="15" fill="#62717b">SUCCESS RATE</text><text x="353" y="215" font-size="34" font-weight="700" fill="#1473e6">95.40%</text>
+    <rect x="600" y="140" width="245" height="105" fill="#eef3f5"/><text x="618" y="172" font-size="15" fill="#62717b">SYNTHETIC GMV</text><text x="618" y="215" font-size="34" font-weight="700" fill="#1473e6">¥260.9M</text>
+    <rect x="865" y="140" width="245" height="105" fill="#eef3f5"/><text x="883" y="172" font-size="15" fill="#62717b">30-DAY REPEAT</text><text x="883" y="215" font-size="34" font-weight="700" fill="#1473e6">75.0%</text>
+  </g>
+  <text x="70" y="298" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#10212b">Monthly reliability and volume</text>
+  <line x1="70" y1="490" x2="735" y2="490" stroke="#d7e0e4"/>
+  <line x1="70" y1="345" x2="70" y2="490" stroke="#d7e0e4"/>
+  <path d="M78 402 C155 382 205 430 270 405 S390 391 455 414 S580 422 722 396" fill="none" stroke="#1473e6" stroke-width="5"/>
+  <g fill="#1473e6"><circle cx="78" cy="402" r="5"/><circle cx="270" cy="405" r="5"/><circle cx="455" cy="414" r="5"/><circle cx="722" cy="396" r="5"/></g>
+  <rect x="785" y="292" width="325" height="210" fill="#eef3f5"/>
+  <text x="810" y="330" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#10212b">Diagnostic callout</text>
+  <text x="810" y="370" font-family="Arial, sans-serif" font-size="17" fill="#10212b">East China · Issuer B</text>
+  <text x="810" y="399" font-family="Arial, sans-serif" font-size="17" fill="#10212b">Transit · Older phone</text>
+  <text x="810" y="446" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#a63d40">84.38%</text>
+  <text x="810" y="477" font-family="Arial, sans-serif" font-size="14" fill="#62717b">synthetic incident success rate</text>
+  <text x="70" y="550" font-family="Arial, sans-serif" font-size="14" fill="#62717b">Workbook tabs: Operating Review · Monthly KPIs · Daily KPIs · Funnel Cohorts · Diagnostic Cuts · Action Tracker · QC Checks</text>
+</svg>
