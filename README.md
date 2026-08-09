@@ -30,7 +30,7 @@ This completed WBR uses a named seven-day reporting period, week-over-week and t
 | 10–25s | **[Complete Week 38 WBR](https://aimiaosu-blip.github.io/apple-pay-business-operations-portfolio/reports/weekly-business-review-week-38.html)** | Status, KPI comparisons, concentrated incident, actions and closure criteria |
 | 25–35s | [`assets/workbook_review.svg`](assets/workbook_review.svg) + [`data/processed/`](data/processed/) | Inspectable operating-review preview and Excel-ready KPI tables |
 | 35–45s | [`deck/executive_brief.html`](deck/executive_brief.html) | Print-ready executive diagnosis and recommendation |
-| 45–55s | [`sql/analysis_queries.sql`](sql/analysis_queries.sql) | KPI, funnel, cohort, segment and anomaly queries |
+| 45–55s | [Core SQL](sql/analysis_queries.sql) + [Advanced SQL](sql/advanced_analysis_queries.sql) | KPI, multi-table JOIN, rolling windows, LAG, ranking and contribution analysis |
 | 55–60s | [`scripts/generate_weekly_review.py`](scripts/generate_weekly_review.py) | Basic Python for reproducible KPI extraction, comparison and validation |
 
 ## Synthetic portfolio findings
@@ -96,6 +96,7 @@ Then open `http://localhost:8000`. Query the ready database with:
 ```bash
 sqlite3 data/apple_pay_operations.sqlite < sql/quality_tests.sql
 sqlite3 data/apple_pay_operations.sqlite < sql/analysis_queries.sql
+sqlite3 data/apple_pay_operations.sqlite < sql/advanced_analysis_queries.sql
 ```
 
 ## KPI definitions
@@ -127,6 +128,7 @@ Full definitions: [`docs/METRIC_GLOSSARY.md`](docs/METRIC_GLOSSARY.md). Field-le
 - [Recommendation and action tracker](docs/ACTION_TRACKER.md)
 - [Project lifecycle](docs/PROJECT_LIFECYCLE.md)
 - [Tableau / Power BI handoff](docs/BI_HANDOFF.md)
+- [Advanced SQL query pack](sql/advanced_analysis_queries.sql)
 
 ## Interview and resume handoff
 
