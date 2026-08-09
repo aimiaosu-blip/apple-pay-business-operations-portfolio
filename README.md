@@ -6,11 +6,17 @@ An end-to-end operating analytics case tailored to an Apple Pay Business Operati
 
 **中文导航：** 这是一个面向数字钱包业务运营岗位的独立作品集，不代表 Apple 官方项目。内容包括周/月度 KPI、指标口径、激活与留存漏斗、异常诊断、行动跟踪、项目全生命周期管理、SQL、Excel 可导入表、交互式网页仪表盘和英文汇报材料。全部运营数据为合成数据，不包含个人支付信息。
 
+## Live interactive dashboard
+
+**[Open Digital Wallet Operations Review →](https://aimiaosu-blip.github.io/apple-pay-business-operations-portfolio/)**
+
+No installation is required. Recruiters can open the dashboard directly in a browser.
+
 ## 60-second walkthrough
 
 | Time | Open | What it demonstrates |
 |---:|---|---|
-| 0–10s | [`dashboard/index.html`](dashboard/index.html) | Filterable KPI monitoring and diagnostic narrative |
+| 0–10s | **[Live dashboard](https://aimiaosu-blip.github.io/apple-pay-business-operations-portfolio/)** | Filterable KPI monitoring and diagnostic narrative |
 | 10–25s | [`assets/workbook_review.svg`](assets/workbook_review.svg) + [`data/processed/`](data/processed/) | Inspectable operating-review preview and Excel-ready KPI tables |
 | 25–40s | [`deck/executive_brief.html`](deck/executive_brief.html) | Print-ready executive diagnosis and recommendation |
 | 40–50s | [`sql/analysis_queries.sql`](sql/analysis_queries.sql) | KPI, funnel, cohort, segment and anomaly queries |
