@@ -12,15 +12,26 @@ An end-to-end operating analytics case tailored to an Apple Pay Business Operati
 
 No installation is required. Recruiters can open the dashboard directly in a browser.
 
+## Complete weekly business review
+
+**[Open the recruiter-ready Week 38 review →](https://aimiaosu-blip.github.io/apple-pay-business-operations-portfolio/reports/weekly-business-review-week-38.html)**
+
+This completed WBR uses a named seven-day reporting period, week-over-week and trailing-four-week comparisons, KPI status, a volume-guarded segment diagnosis, an owner/deadline action tracker and explicit closure criteria.
+
+- [Read the Markdown report](reports/WEEKLY_BUSINESS_REVIEW_2025_W38.md)
+- [Inspect the reviewed JSON evidence](data/processed/weekly_business_review_2025_w38.json)
+- [Review the basic-Python generator](scripts/generate_weekly_review.py)
+
 ## 60-second walkthrough
 
 | Time | Open | What it demonstrates |
 |---:|---|---|
 | 0–10s | **[Live dashboard](https://aimiaosu-blip.github.io/apple-pay-business-operations-portfolio/)** | Filterable KPI monitoring and diagnostic narrative |
-| 10–25s | [`assets/workbook_review.svg`](assets/workbook_review.svg) + [`data/processed/`](data/processed/) | Inspectable operating-review preview and Excel-ready KPI tables |
-| 25–40s | [`deck/executive_brief.html`](deck/executive_brief.html) | Print-ready executive diagnosis and recommendation |
-| 40–50s | [`sql/analysis_queries.sql`](sql/analysis_queries.sql) | KPI, funnel, cohort, segment and anomaly queries |
-| 50–60s | [`docs/PROJECT_LIFECYCLE.md`](docs/PROJECT_LIFECYCLE.md) | Pre-launch, launch and post-launch governance |
+| 10–25s | **[Complete Week 38 WBR](https://aimiaosu-blip.github.io/apple-pay-business-operations-portfolio/reports/weekly-business-review-week-38.html)** | Status, KPI comparisons, concentrated incident, actions and closure criteria |
+| 25–35s | [`assets/workbook_review.svg`](assets/workbook_review.svg) + [`data/processed/`](data/processed/) | Inspectable operating-review preview and Excel-ready KPI tables |
+| 35–45s | [`deck/executive_brief.html`](deck/executive_brief.html) | Print-ready executive diagnosis and recommendation |
+| 45–55s | [`sql/analysis_queries.sql`](sql/analysis_queries.sql) | KPI, funnel, cohort, segment and anomaly queries |
+| 55–60s | [`scripts/generate_weekly_review.py`](scripts/generate_weekly_review.py) | Basic Python for reproducible KPI extraction, comparison and validation |
 
 ## Synthetic portfolio findings
 
@@ -62,7 +73,8 @@ data/           SQLite database generated locally by the deterministic script
 sql/            schema, transformations/analysis and quality tests
 deck/           self-contained, print-ready executive HTML brief
 docs/           dictionary, glossary, review, diagnosis, actions, lifecycle, BI handoff
-scripts/        clean-check validation entry point
+reports/        completed Week 38 WBR plus its validated report artifact
+scripts/        data generation, quality checks and reproducible WBR generation
 ```
 
 ## Reproduce and validate
@@ -74,6 +86,8 @@ git clone https://github.com/aimiaosu-blip/apple-pay-business-operations-portfol
 cd apple-pay-business-operations-portfolio
 python scripts/generate_data.py   # creates the full CSV and SQLite database
 python scripts/rebuild.py --check
+python scripts/generate_weekly_review.py
+python scripts/build_weekly_review_artifacts.py
 python -m http.server 8000 -d dashboard
 ```
 
@@ -106,7 +120,9 @@ Full definitions: [`docs/METRIC_GLOSSARY.md`](docs/METRIC_GLOSSARY.md). Field-le
 
 ## Operating artifacts
 
-- [Weekly/monthly business review](docs/BUSINESS_REVIEW.md)
+- [Complete Week 38 business review](reports/WEEKLY_BUSINESS_REVIEW_2025_W38.md)
+- [Browser-ready Week 38 business review](https://aimiaosu-blip.github.io/apple-pay-business-operations-portfolio/reports/weekly-business-review-week-38.html)
+- [Weekly/monthly review framework](docs/BUSINESS_REVIEW.md)
 - [Diagnostic case](docs/DIAGNOSTIC_CASE.md)
 - [Recommendation and action tracker](docs/ACTION_TRACKER.md)
 - [Project lifecycle](docs/PROJECT_LIFECYCLE.md)

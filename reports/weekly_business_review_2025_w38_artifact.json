@@ -1,0 +1,1047 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Digital Wallet Weekly Business Review \u2014 Week 38, 2025",
+    "description": "A recruiter-facing synthetic operations review with KPI status, segment diagnosis, actions and closure criteria.",
+    "generatedAt": "2026-08-09T00:00:00+08:00",
+    "sources": [
+      {
+        "id": "synthetic-weekly-review",
+        "label": "Deterministic synthetic digital-wallet operations review",
+        "path": "data/processed/weekly_business_review_2025_w38.json",
+        "query": {
+          "language": "sql",
+          "engine": "SQLite",
+          "description": "Reproduces the Week 38 portfolio KPIs, trailing benchmark, segment diagnostic and quality checks from aggregate synthetic data.",
+          "executed_at": "2026-08-09T00:00:00+08:00",
+          "sql": "SELECT date, region, issuer, merchant_category, device_segment, attempts, successful_transactions, failed_transactions, gmv_cny, is_anomaly_window, is_synthetic FROM fact_daily_operations WHERE date BETWEEN '2025-08-18' AND '2025-09-21' ORDER BY date, region, issuer, merchant_category, device_segment;",
+          "tables_used": [
+            "data/apple_pay_operations.sqlite.fact_daily_operations"
+          ],
+          "filters": [
+            "Report week: 2025-09-15 through 2025-09-21",
+            "Prior week: 2025-09-08 through 2025-09-14",
+            "Trailing baseline: 2025-08-18 through 2025-09-14",
+            "Escalation rows require at least 500 weekly attempts"
+          ],
+          "metric_definitions": [
+            "Success rate = summed successful transactions / summed attempts",
+            "Percentage-point delta = current success rate minus trailing four-week weighted success rate",
+            "GMV is synthetic successful payment volume and is not revenue"
+          ]
+        }
+      },
+      {
+        "id": "illustrative-action-plan",
+        "label": "Illustrative owner-based incident action plan",
+        "path": "scripts/build_weekly_review_artifacts.py",
+        "query": {
+          "language": "sql",
+          "engine": "SQLite",
+          "description": "Fictional owner, timing, status and validation fields created for the synthetic incident response.",
+          "executed_at": "2026-08-09T00:00:00+08:00",
+          "sql": "WITH actions(priority, action, owner, due_date, status, validation_metric) AS (VALUES (1, 'Validate issuer response-code and route mapping for the affected cut', 'Payments Operations', '2025-09-16', 'IN PROGRESS', 'Mapping review completed with evidence log'), (2, 'Reproduce the issue across issuer, transit and older-device test cases', 'Engineering + Issuer Partner', '2025-09-17', 'IN PROGRESS', 'Failure pattern reproduced or ruled out'), (3, 'Prepare a bounded configuration fix and rollback decision', 'Product Operations', '2025-09-19', 'PLANNED', 'Approved change and rollback criteria'), (4, 'Monitor recovery and close only after seven complete days', 'Business Analytics', '2025-09-28', 'NOT STARTED', 'Success rate within 0.5pp of baseline for 7 days')) SELECT * FROM actions ORDER BY priority;"
+        }
+      }
+    ],
+    "cards": [
+      {
+        "id": "card-success-rate",
+        "description": "Weighted successful transactions divided by attempts for 15\u201321 September 2025.",
+        "dataset": "kpi_summary",
+        "sourceId": "synthetic-weekly-review",
+        "metrics": [
+          {
+            "label": "Portfolio success rate \u00b7 YELLOW",
+            "field": "success_rate",
+            "format": "percent"
+          },
+          {
+            "label": "Prior",
+            "field": "success_rate_prior",
+            "format": "percent"
+          },
+          {
+            "label": "vs benchmark",
+            "field": "success_rate_delta_pp",
+            "format": "number",
+            "signed": true
+          }
+        ]
+      },
+      {
+        "id": "card-attempts",
+        "description": "All aggregate transaction attempts in the complete seven-day report week.",
+        "dataset": "kpi_summary",
+        "sourceId": "synthetic-weekly-review",
+        "metrics": [
+          {
+            "label": "Transaction attempts \u00b7 GREEN",
+            "field": "attempts",
+            "format": "number"
+          },
+          {
+            "label": "WoW",
+            "field": "attempts_wow",
+            "format": "percent",
+            "signed": true
+          }
+        ]
+      },
+      {
+        "id": "card-gmv",
+        "description": "Successful payment volume in CNY; this is not revenue.",
+        "dataset": "kpi_summary",
+        "sourceId": "synthetic-weekly-review",
+        "metrics": [
+          {
+            "label": "Synthetic GMV \u00b7 GREEN",
+            "field": "gmv_cny",
+            "format": "currency",
+            "unit": "CNY"
+          },
+          {
+            "label": "WoW",
+            "field": "gmv_wow",
+            "format": "percent",
+            "signed": true
+          }
+        ]
+      },
+      {
+        "id": "card-affected",
+        "description": "East China / Issuer B / Transit / Older phone; 545 weekly attempts.",
+        "dataset": "kpi_summary",
+        "sourceId": "synthetic-weekly-review",
+        "metrics": [
+          {
+            "label": "Affected-cut success rate \u00b7 RED",
+            "field": "affected_success_rate",
+            "format": "percent"
+          },
+          {
+            "label": "vs benchmark",
+            "field": "affected_delta_pp",
+            "format": "number",
+            "signed": true
+          }
+        ]
+      },
+      {
+        "id": "card-quality",
+        "description": "Attempt balance and synthetic-data flags checked across the report week.",
+        "dataset": "kpi_summary",
+        "sourceId": "synthetic-weekly-review",
+        "metrics": [
+          {
+            "label": "Data reconciliation errors \u00b7 GREEN",
+            "field": "quality_errors",
+            "format": "number"
+          },
+          {
+            "label": "Rows checked",
+            "field": "rows_checked",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "chart-diagnostic-trend",
+        "title": "Daily transaction success rate",
+        "description": "Trailing four-week baseline plus Week 38; affected segment compared with the rest of the portfolio.",
+        "type": "line",
+        "dataset": "diagnostic_daily",
+        "sourceId": "synthetic-weekly-review",
+        "encodings": {
+          "x": {
+            "field": "date",
+            "type": "temporal",
+            "title": "Date"
+          },
+          "y": {
+            "field": "success_rate",
+            "type": "quantitative",
+            "title": "Success rate",
+            "format": "percent"
+          },
+          "color": {
+            "field": "series",
+            "type": "nominal",
+            "title": "Portfolio cut"
+          }
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "table-segments",
+        "title": "High-volume segment performance",
+        "description": "Only cuts with at least 500 Week 38 attempts; ordered by percentage-point movement versus the trailing benchmark.",
+        "dataset": "segment_rows",
+        "sourceId": "synthetic-weekly-review",
+        "columns": [
+          {
+            "field": "segment",
+            "label": "Segment",
+            "type": "text"
+          },
+          {
+            "field": "attempts",
+            "label": "Attempts",
+            "type": "number"
+          },
+          {
+            "field": "current_success_rate",
+            "label": "Current",
+            "type": "percent"
+          },
+          {
+            "field": "baseline_success_rate",
+            "label": "Benchmark",
+            "type": "percent"
+          },
+          {
+            "field": "delta_pp",
+            "label": "Delta (pp)",
+            "type": "number",
+            "semantic": "movement"
+          },
+          {
+            "field": "status",
+            "label": "Status",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "delta_pp",
+          "direction": "asc"
+        }
+      },
+      {
+        "id": "table-actions",
+        "title": "Incident action tracker",
+        "description": "Illustrative owners, deadlines, progress and evidence required for closure.",
+        "dataset": "action_rows",
+        "sourceId": "illustrative-action-plan",
+        "columns": [
+          {
+            "field": "priority",
+            "label": "Priority",
+            "type": "number"
+          },
+          {
+            "field": "action",
+            "label": "Action",
+            "type": "text"
+          },
+          {
+            "field": "owner",
+            "label": "Owner",
+            "type": "text"
+          },
+          {
+            "field": "due_date",
+            "label": "Due",
+            "type": "date"
+          },
+          {
+            "field": "status",
+            "label": "Status",
+            "type": "text"
+          },
+          {
+            "field": "validation_metric",
+            "label": "Evidence required",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "priority",
+          "direction": "asc"
+        }
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# Digital Wallet Weekly Business Review \u2014 Week 38, 2025"
+      },
+      {
+        "id": "executive-summary",
+        "type": "markdown",
+        "body": "## Executive Summary\n\n- **Portfolio status is YELLOW.** Attempts increased 1.1% week over week and synthetic GMV increased 1.2%, while weighted success rate declined only 0.07 percentage points versus the trailing benchmark.\n- **One high-volume cut is RED.** East China / Issuer B / Transit / Older phone fell to 84.04%, 12.07 percentage points below baseline on 545 attempts.\n- **The incident is concentrated.** The rest of the portfolio remained within 0.02 percentage points of baseline; the affected cut explains approximately 63% of estimated excess failures.\n- **Validate before assigning cause.** Response-code mapping, routing and device compatibility require controlled testing; closure needs seven complete days within 0.5 percentage points of baseline.\n",
+        "sourceId": "synthetic-weekly-review"
+      },
+      {
+        "id": "kpi-strip",
+        "type": "metric-strip",
+        "cardIds": [
+          "card-success-rate",
+          "card-attempts",
+          "card-gmv",
+          "card-affected",
+          "card-quality"
+        ]
+      },
+      {
+        "id": "status-contract",
+        "type": "markdown",
+        "body": "## How to Read the Status\n\n**RED** requires at least 500 weekly attempts and a success rate at least 2.0 percentage points below the trailing four-week benchmark. **YELLOW** marks a 0.5\u20132.0 point decline or an open material incident. **GREEN** means performance remains within 0.5 points with complete reconciled data. The benchmark is an operational reference, not a commercial target."
+      },
+      {
+        "id": "finding-concentration",
+        "type": "markdown",
+        "body": "## One Cut Drives the Material Risk\n\nThe affected cut fell to **84.04%**, while the rest of the portfolio stayed at **95.38%**. The chart shows the affected cut breaking sharply from its prior range on 15 September; the portfolio remainder stays stable. This supports a bounded investigation, not a confirmed technical cause.",
+        "sourceId": "synthetic-weekly-review"
+      },
+      {
+        "id": "diagnostic-chart",
+        "type": "chart",
+        "chartId": "chart-diagnostic-trend"
+      },
+      {
+        "id": "segment-finding",
+        "type": "markdown",
+        "body": "## Only One High-Volume Cut Breaches the Red Threshold\n\nThe ranked table applies the same 500-attempt guardrail to every segment. Smaller or moderate movements remain yellow or green; the East China / Issuer B / Transit / Older phone cut is the only red breach. This concentration protects the team from treating portfolio-wide demand as the problem."
+      },
+      {
+        "id": "segment-table",
+        "type": "table",
+        "tableId": "table-segments"
+      },
+      {
+        "id": "actions-heading",
+        "type": "markdown",
+        "body": "## Prioritized Actions and Closure Criteria\n\nValidate response-code mapping and reproduce the issue before changing configuration. Any change needs an explicit rollback rule. Close the incident only after seven complete days within 0.5 percentage points of baseline. There are no carried-over actions because this is the incident-opening review."
+      },
+      {
+        "id": "actions-table",
+        "type": "table",
+        "tableId": "table-actions"
+      },
+      {
+        "id": "further-questions",
+        "type": "markdown",
+        "body": "## Further Questions\n\n1. Did issuer response-code or route mapping change on 15 September?\n2. Can the pattern be reproduced across device software versions and controlled transit tests?\n3. Did affected users retry successfully through another device or channel?\n4. Are the yellow segments persistent after another complete week?"
+      },
+      {
+        "id": "caveats",
+        "type": "markdown",
+        "body": "## Caveats and Assumptions\n\n- All data are deterministic, synthetic and aggregate; no personal or payment identifiers are included.\n- The dataset identifies where performance changed but does not contain logs or response codes needed to confirm technical cause.\n- Synthetic GMV is payment volume, not revenue or profit.\n- The four-week benchmark is a monitoring reference, not a contractual target.\n- Funnel and 30-day repeat metrics are excluded because the relevant cohorts are not mature at the reporting cutoff."
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "status": "ready",
+    "generatedAt": "2026-08-09T00:00:00+08:00",
+    "datasets": {
+      "kpi_summary": [
+        {
+          "success_rate": 0.9533606197365992,
+          "success_rate_prior": 0.9539657913879787,
+          "success_rate_delta_pp": -0.06663043139515379,
+          "attempts": 157099,
+          "attempts_wow": 0.011317038000270285,
+          "gmv_cny": 5444004.42,
+          "gmv_wow": 0.011877504788603055,
+          "affected_success_rate": 0.8403669724770643,
+          "affected_delta_pp": -12.070943309717885,
+          "quality_errors": 0,
+          "rows_checked": 1680
+        }
+      ],
+      "diagnostic_daily": [
+        {
+          "date": "2025-08-18",
+          "series": "Affected segment",
+          "attempts": 69,
+          "successful_transactions": 66,
+          "success_rate": 0.9565217391304348,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-19",
+          "series": "Affected segment",
+          "attempts": 72,
+          "successful_transactions": 68,
+          "success_rate": 0.9444444444444444,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-20",
+          "series": "Affected segment",
+          "attempts": 69,
+          "successful_transactions": 66,
+          "success_rate": 0.9565217391304348,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-21",
+          "series": "Affected segment",
+          "attempts": 79,
+          "successful_transactions": 74,
+          "success_rate": 0.9367088607594937,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-22",
+          "series": "Affected segment",
+          "attempts": 75,
+          "successful_transactions": 72,
+          "success_rate": 0.96,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-23",
+          "series": "Affected segment",
+          "attempts": 82,
+          "successful_transactions": 80,
+          "success_rate": 0.975609756097561,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-24",
+          "series": "Affected segment",
+          "attempts": 85,
+          "successful_transactions": 82,
+          "success_rate": 0.9647058823529412,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-25",
+          "series": "Affected segment",
+          "attempts": 74,
+          "successful_transactions": 69,
+          "success_rate": 0.9324324324324325,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-26",
+          "series": "Affected segment",
+          "attempts": 76,
+          "successful_transactions": 73,
+          "success_rate": 0.9605263157894737,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-27",
+          "series": "Affected segment",
+          "attempts": 73,
+          "successful_transactions": 71,
+          "success_rate": 0.9726027397260274,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-28",
+          "series": "Affected segment",
+          "attempts": 73,
+          "successful_transactions": 70,
+          "success_rate": 0.958904109589041,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-29",
+          "series": "Affected segment",
+          "attempts": 68,
+          "successful_transactions": 67,
+          "success_rate": 0.9852941176470589,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-30",
+          "series": "Affected segment",
+          "attempts": 81,
+          "successful_transactions": 79,
+          "success_rate": 0.9753086419753086,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-31",
+          "series": "Affected segment",
+          "attempts": 77,
+          "successful_transactions": 73,
+          "success_rate": 0.948051948051948,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-01",
+          "series": "Affected segment",
+          "attempts": 70,
+          "successful_transactions": 67,
+          "success_rate": 0.9571428571428572,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-02",
+          "series": "Affected segment",
+          "attempts": 67,
+          "successful_transactions": 64,
+          "success_rate": 0.9552238805970149,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-03",
+          "series": "Affected segment",
+          "attempts": 72,
+          "successful_transactions": 69,
+          "success_rate": 0.9583333333333334,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-04",
+          "series": "Affected segment",
+          "attempts": 69,
+          "successful_transactions": 65,
+          "success_rate": 0.9420289855072463,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-05",
+          "series": "Affected segment",
+          "attempts": 74,
+          "successful_transactions": 73,
+          "success_rate": 0.9864864864864865,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-06",
+          "series": "Affected segment",
+          "attempts": 76,
+          "successful_transactions": 73,
+          "success_rate": 0.9605263157894737,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-07",
+          "series": "Affected segment",
+          "attempts": 82,
+          "successful_transactions": 79,
+          "success_rate": 0.9634146341463414,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-08",
+          "series": "Affected segment",
+          "attempts": 78,
+          "successful_transactions": 76,
+          "success_rate": 0.9743589743589743,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-09",
+          "series": "Affected segment",
+          "attempts": 58,
+          "successful_transactions": 57,
+          "success_rate": 0.9827586206896551,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-10",
+          "series": "Affected segment",
+          "attempts": 74,
+          "successful_transactions": 71,
+          "success_rate": 0.9594594594594594,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-11",
+          "series": "Affected segment",
+          "attempts": 76,
+          "successful_transactions": 73,
+          "success_rate": 0.9605263157894737,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-12",
+          "series": "Affected segment",
+          "attempts": 73,
+          "successful_transactions": 70,
+          "success_rate": 0.958904109589041,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-13",
+          "series": "Affected segment",
+          "attempts": 82,
+          "successful_transactions": 79,
+          "success_rate": 0.9634146341463414,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-14",
+          "series": "Affected segment",
+          "attempts": 77,
+          "successful_transactions": 74,
+          "success_rate": 0.961038961038961,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-15",
+          "series": "Affected segment",
+          "attempts": 77,
+          "successful_transactions": 65,
+          "success_rate": 0.8441558441558441,
+          "period": "Current week"
+        },
+        {
+          "date": "2025-09-16",
+          "series": "Affected segment",
+          "attempts": 78,
+          "successful_transactions": 65,
+          "success_rate": 0.8333333333333334,
+          "period": "Current week"
+        },
+        {
+          "date": "2025-09-17",
+          "series": "Affected segment",
+          "attempts": 80,
+          "successful_transactions": 69,
+          "success_rate": 0.8625,
+          "period": "Current week"
+        },
+        {
+          "date": "2025-09-18",
+          "series": "Affected segment",
+          "attempts": 75,
+          "successful_transactions": 63,
+          "success_rate": 0.84,
+          "period": "Current week"
+        },
+        {
+          "date": "2025-09-19",
+          "series": "Affected segment",
+          "attempts": 69,
+          "successful_transactions": 57,
+          "success_rate": 0.8260869565217391,
+          "period": "Current week"
+        },
+        {
+          "date": "2025-09-20",
+          "series": "Affected segment",
+          "attempts": 81,
+          "successful_transactions": 67,
+          "success_rate": 0.8271604938271605,
+          "period": "Current week"
+        },
+        {
+          "date": "2025-09-21",
+          "series": "Affected segment",
+          "attempts": 85,
+          "successful_transactions": 72,
+          "success_rate": 0.8470588235294118,
+          "period": "Current week"
+        },
+        {
+          "date": "2025-08-18",
+          "series": "Rest of portfolio",
+          "attempts": 21089,
+          "successful_transactions": 20105,
+          "success_rate": 0.9533406041064062,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-19",
+          "series": "Rest of portfolio",
+          "attempts": 21044,
+          "successful_transactions": 20086,
+          "success_rate": 0.954476335297472,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-20",
+          "series": "Rest of portfolio",
+          "attempts": 21121,
+          "successful_transactions": 20150,
+          "success_rate": 0.9540267979735808,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-21",
+          "series": "Rest of portfolio",
+          "attempts": 21129,
+          "successful_transactions": 20151,
+          "success_rate": 0.9537129064319182,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-22",
+          "series": "Rest of portfolio",
+          "attempts": 21045,
+          "successful_transactions": 20080,
+          "success_rate": 0.9541458778807318,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-23",
+          "series": "Rest of portfolio",
+          "attempts": 23228,
+          "successful_transactions": 22129,
+          "success_rate": 0.9526864129498881,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-24",
+          "series": "Rest of portfolio",
+          "attempts": 23197,
+          "successful_transactions": 22118,
+          "success_rate": 0.9534853644867871,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-25",
+          "series": "Rest of portfolio",
+          "attempts": 21174,
+          "successful_transactions": 20208,
+          "success_rate": 0.954378010767923,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-26",
+          "series": "Rest of portfolio",
+          "attempts": 21263,
+          "successful_transactions": 20289,
+          "success_rate": 0.9541927291539294,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-27",
+          "series": "Rest of portfolio",
+          "attempts": 21333,
+          "successful_transactions": 20362,
+          "success_rate": 0.954483663807247,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-28",
+          "series": "Rest of portfolio",
+          "attempts": 21420,
+          "successful_transactions": 20453,
+          "success_rate": 0.9548552754435108,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-29",
+          "series": "Rest of portfolio",
+          "attempts": 21268,
+          "successful_transactions": 20302,
+          "success_rate": 0.9545796501786722,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-30",
+          "series": "Rest of portfolio",
+          "attempts": 23395,
+          "successful_transactions": 22324,
+          "success_rate": 0.954220987390468,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-08-31",
+          "series": "Rest of portfolio",
+          "attempts": 23415,
+          "successful_transactions": 22369,
+          "success_rate": 0.9553277813367499,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-01",
+          "series": "Rest of portfolio",
+          "attempts": 21315,
+          "successful_transactions": 20345,
+          "success_rate": 0.9544921416842599,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-02",
+          "series": "Rest of portfolio",
+          "attempts": 21343,
+          "successful_transactions": 20352,
+          "success_rate": 0.9535679145387247,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-03",
+          "series": "Rest of portfolio",
+          "attempts": 21407,
+          "successful_transactions": 20419,
+          "success_rate": 0.9538468725183351,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-04",
+          "series": "Rest of portfolio",
+          "attempts": 21347,
+          "successful_transactions": 20333,
+          "success_rate": 0.9524991802126762,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-05",
+          "series": "Rest of portfolio",
+          "attempts": 21462,
+          "successful_transactions": 20480,
+          "success_rate": 0.9542447115832634,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-06",
+          "series": "Rest of portfolio",
+          "attempts": 23668,
+          "successful_transactions": 22593,
+          "success_rate": 0.9545800236606389,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-07",
+          "series": "Rest of portfolio",
+          "attempts": 23685,
+          "successful_transactions": 22583,
+          "success_rate": 0.953472662022377,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-08",
+          "series": "Rest of portfolio",
+          "attempts": 21371,
+          "successful_transactions": 20403,
+          "success_rate": 0.9547049740302279,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-09",
+          "series": "Rest of portfolio",
+          "attempts": 21447,
+          "successful_transactions": 20459,
+          "success_rate": 0.9539329509954773,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-10",
+          "series": "Rest of portfolio",
+          "attempts": 21477,
+          "successful_transactions": 20497,
+          "success_rate": 0.9543697909391442,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-11",
+          "series": "Rest of portfolio",
+          "attempts": 21574,
+          "successful_transactions": 20554,
+          "success_rate": 0.9527208677111337,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-12",
+          "series": "Rest of portfolio",
+          "attempts": 21493,
+          "successful_transactions": 20502,
+          "success_rate": 0.9538919648257572,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-13",
+          "series": "Rest of portfolio",
+          "attempts": 23684,
+          "successful_transactions": 22589,
+          "success_rate": 0.9537662557000507,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-14",
+          "series": "Rest of portfolio",
+          "attempts": 23777,
+          "successful_transactions": 22686,
+          "success_rate": 0.9541153215292089,
+          "period": "Trailing baseline"
+        },
+        {
+          "date": "2025-09-15",
+          "series": "Rest of portfolio",
+          "attempts": 21544,
+          "successful_transactions": 20566,
+          "success_rate": 0.9546045302636464,
+          "period": "Current week"
+        },
+        {
+          "date": "2025-09-16",
+          "series": "Rest of portfolio",
+          "attempts": 21712,
+          "successful_transactions": 20693,
+          "success_rate": 0.9530674281503316,
+          "period": "Current week"
+        },
+        {
+          "date": "2025-09-17",
+          "series": "Rest of portfolio",
+          "attempts": 21690,
+          "successful_transactions": 20712,
+          "success_rate": 0.9549100968188106,
+          "period": "Current week"
+        },
+        {
+          "date": "2025-09-18",
+          "series": "Rest of portfolio",
+          "attempts": 21764,
+          "successful_transactions": 20753,
+          "success_rate": 0.9535471420694726,
+          "period": "Current week"
+        },
+        {
+          "date": "2025-09-19",
+          "series": "Rest of portfolio",
+          "attempts": 21818,
+          "successful_transactions": 20796,
+          "success_rate": 0.9531579429828582,
+          "period": "Current week"
+        },
+        {
+          "date": "2025-09-20",
+          "series": "Rest of portfolio",
+          "attempts": 23921,
+          "successful_transactions": 22814,
+          "success_rate": 0.9537226704569207,
+          "period": "Current week"
+        },
+        {
+          "date": "2025-09-21",
+          "series": "Rest of portfolio",
+          "attempts": 24105,
+          "successful_transactions": 22980,
+          "success_rate": 0.9533291848164281,
+          "period": "Current week"
+        }
+      ],
+      "segment_rows": [
+        {
+          "segment": "East China / Issuer B / Transit / Older phone",
+          "attempts": 545,
+          "current_success_rate": 0.8403669724770643,
+          "baseline_success_rate": 0.9610764055742431,
+          "delta_pp": -12.070943309717885,
+          "status": "RED"
+        },
+        {
+          "segment": "South China / Issuer A / Dining / Recent phone",
+          "attempts": 711,
+          "current_success_rate": 0.9493670886075949,
+          "baseline_success_rate": 0.9634015069967707,
+          "delta_pp": -1.4034418389175851,
+          "status": "YELLOW"
+        },
+        {
+          "segment": "West China / Issuer D / Retail / Watch",
+          "attempts": 615,
+          "current_success_rate": 0.9365853658536586,
+          "baseline_success_rate": 0.9490605427974947,
+          "delta_pp": -1.2475176943836153,
+          "status": "YELLOW"
+        },
+        {
+          "segment": "North China / Issuer C / Dining / Older phone",
+          "attempts": 565,
+          "current_success_rate": 0.9486725663716814,
+          "baseline_success_rate": 0.959981809913597,
+          "delta_pp": -1.1309243541915648,
+          "status": "YELLOW"
+        },
+        {
+          "segment": "South China / Issuer B / Transit / Recent phone",
+          "attempts": 770,
+          "current_success_rate": 0.9532467532467532,
+          "baseline_success_rate": 0.9637632978723404,
+          "delta_pp": -1.0516544625587154,
+          "status": "YELLOW"
+        },
+        {
+          "segment": "East China / Issuer D / Digital / Older phone",
+          "attempts": 632,
+          "current_success_rate": 0.9493670886075949,
+          "baseline_success_rate": 0.9590131317150816,
+          "delta_pp": -0.9646043107486735,
+          "status": "YELLOW"
+        }
+      ],
+      "action_rows": [
+        {
+          "priority": 1,
+          "action": "Validate issuer response-code and route mapping for the affected cut",
+          "owner": "Payments Operations",
+          "due_date": "2025-09-16",
+          "status": "IN PROGRESS",
+          "validation_metric": "Mapping review completed with evidence log"
+        },
+        {
+          "priority": 2,
+          "action": "Reproduce the issue across issuer, transit and older-device test cases",
+          "owner": "Engineering + Issuer Partner",
+          "due_date": "2025-09-17",
+          "status": "IN PROGRESS",
+          "validation_metric": "Failure pattern reproduced or ruled out"
+        },
+        {
+          "priority": 3,
+          "action": "Prepare a bounded configuration fix and rollback decision",
+          "owner": "Product Operations",
+          "due_date": "2025-09-19",
+          "status": "PLANNED",
+          "validation_metric": "Approved change and rollback criteria"
+        },
+        {
+          "priority": 4,
+          "action": "Monitor recovery and close only after seven complete days",
+          "owner": "Business Analytics",
+          "due_date": "2025-09-28",
+          "status": "NOT STARTED",
+          "validation_metric": "Success rate within 0.5pp of baseline for 7 days"
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "synthetic-weekly-review",
+      "label": "Deterministic synthetic digital-wallet operations review",
+      "path": "data/processed/weekly_business_review_2025_w38.json",
+      "query": {
+        "language": "sql",
+        "engine": "SQLite",
+        "description": "Reproduces the Week 38 portfolio KPIs, trailing benchmark, segment diagnostic and quality checks from aggregate synthetic data.",
+        "executed_at": "2026-08-09T00:00:00+08:00",
+        "sql": "SELECT date, region, issuer, merchant_category, device_segment, attempts, successful_transactions, failed_transactions, gmv_cny, is_anomaly_window, is_synthetic FROM fact_daily_operations WHERE date BETWEEN '2025-08-18' AND '2025-09-21' ORDER BY date, region, issuer, merchant_category, device_segment;",
+        "tables_used": [
+          "data/apple_pay_operations.sqlite.fact_daily_operations"
+        ],
+        "filters": [
+          "Report week: 2025-09-15 through 2025-09-21",
+          "Prior week: 2025-09-08 through 2025-09-14",
+          "Trailing baseline: 2025-08-18 through 2025-09-14",
+          "Escalation rows require at least 500 weekly attempts"
+        ],
+        "metric_definitions": [
+          "Success rate = summed successful transactions / summed attempts",
+          "Percentage-point delta = current success rate minus trailing four-week weighted success rate",
+          "GMV is synthetic successful payment volume and is not revenue"
+        ]
+      }
+    },
+    {
+      "id": "illustrative-action-plan",
+      "label": "Illustrative owner-based incident action plan",
+      "path": "scripts/build_weekly_review_artifacts.py",
+      "query": {
+        "language": "sql",
+        "engine": "SQLite",
+        "description": "Fictional owner, timing, status and validation fields created for the synthetic incident response.",
+        "executed_at": "2026-08-09T00:00:00+08:00",
+        "sql": "WITH actions(priority, action, owner, due_date, status, validation_metric) AS (VALUES (1, 'Validate issuer response-code and route mapping for the affected cut', 'Payments Operations', '2025-09-16', 'IN PROGRESS', 'Mapping review completed with evidence log'), (2, 'Reproduce the issue across issuer, transit and older-device test cases', 'Engineering + Issuer Partner', '2025-09-17', 'IN PROGRESS', 'Failure pattern reproduced or ruled out'), (3, 'Prepare a bounded configuration fix and rollback decision', 'Product Operations', '2025-09-19', 'PLANNED', 'Approved change and rollback criteria'), (4, 'Monitor recovery and close only after seven complete days', 'Business Analytics', '2025-09-28', 'NOT STARTED', 'Success rate within 0.5pp of baseline for 7 days')) SELECT * FROM actions ORDER BY priority;"
+      }
+    }
+  ]
+}
